@@ -177,8 +177,8 @@ $(document).ready(function(){
 
 
   /*variable initialization */
-  var rowCount=6;
-  var colCount=12;
+  var rowCount=4;
+  var colCount=4;
   var downRow=-1;
   var downCol=-1;
   var clearHighlightTimer = 0;
@@ -189,7 +189,7 @@ $(document).ready(function(){
   var rightLocation = [-1,-1,-1];
   var resultLocation = [-1,-1,-1];
   var initialHeart=10;
-  var heartScore=1000;
+  var heartScore=100;
   var numberCount=0;
   var totalScore=0;
   //var chain = false;
@@ -198,6 +198,17 @@ $(document).ready(function(){
 
 //---------  clearHighlight  -----------
   function generateRandomDigits(){
+    for(var i=0;i<6;i++)
+    {
+      for(var j=0;j<12;j++)
+      {
+        if(i>=rowCount || j>=colCount){
+          $("#r"+i+"c"+j).hide();
+        }else{
+          $("#r"+i+"c"+j).show();
+        }
+      }
+    }
     for(var i=0;i<rowCount;i++)
     {
       for(var j=0;j<colCount;j++)
