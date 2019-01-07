@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)http://ravenlamb.com/games/arithmeticgame2.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Arithmetic Chain Game 2</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style type="text/css">
+body {
+  /*background: linear-gradient(90deg, white, gray);*/
+  background-color: #eee;
+}
+
+body, h1, p {
+  font-family: "Helvetica Neue", "Segoe UI", Segoe, Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.container {
+  margin-left:  auto;
+  margin-right:  auto;
+  margin-top: 60px;
+  max-width: 1170px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.row:before, .row:after {
+  display: table;
+  content: " ";
+}
+
+h1 {
+  font-size: 48px;
+  font-weight: 300;
+  margin: 0 0 20px 0;
+}
+
+.lead {
+  font-size: 21px;
+  font-weight: 200;
+  margin-bottom: 20px;
+}
+
+p {
+  margin: 0 0 10px;
+}
+
+a {
+  color: #3282e6;
+  text-decoration: none;
+}
+ul
+{
+  list-style-type:none;
+}
+div.game
+{
+  margin:20px;
+  background-color:white;
+  text-align:center;
+  font-family:monospace;
+  font-size:2em;
+  width:100%; max-width:800px; min-width:400px;
+}
+div.cell
+{
+  display:inline-block;
+    -webkit-user-select: none; /* Safari 3.1+ */
+    -moz-user-select: none; /* Firefox 2+ */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Standard syntax */
+    text-shadow: 1px 1px 2px #AAAAAA;
+}
+div.highlight
+{
+  color:white;
+  background-color: #1e90ff;
+}
+div.inoperand
+{
+  background-color: #FFFFFF;
+}
+div.leftOperand
+{
+  color:#FF3333;
+}
+div.rightOperand
+{
+  color:#33FF33;
+}
+div.result
+{
+  color:#3333FF;
+}
+div.beingReplace{
+  color:#AAAAAA;
+}
+div.current
+{
+  background-color: #EEEEFF;
+  font-size:1.2em;
+  vertical-align:bottom;
+}
+div.score{
+  font-family: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  display:flex;
+}
+div.heart{
+  text-align:left;
+  width:50%;
+  padding: 0 20px;
+}
+div.total{
+  text-align:right;
+  width:50%;
+  padding: 0 20px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+<header>
+</header>
+<div class="description">
+javascript game<br>
+6 rows of 12 digits<br>
+highlight left operand, right operand and result to score (operator +-*/)<br>
+score = right + left + result <br>
+first equation 30sec, subsequent 10 sec, lose one heart if cannot make one in time<br>
+score &lt; 20 or equation containing zero, add 3 second to clock; score &lt; 100 does not add to total, reset 10 second clock<br>
+maximum 10 hearts, for each 1000 in total, add one heart<br>
+chain, double points<br>
+cookie for max personal best<br>
+remove numbers from valid equations and shift digits from left to right
+<br><br>
+second option<br>
+each number picked, lose one heart, every 1000 points, add one heart<br>
+remove numbers from valid equations and shift digits from left to right
+<br><br>
+click left most digit, then right most digit
+</div>
+
+
+
+<div class="game">
+<div class="score">
+<div class="heart"></div>
+<div class="total"></div>
+</div><!-- end of div score-->
+<div class="digitpanel">
+
+<div id="r0" class="row"><div id="r0c0" class="cell">4</div><div id="r0c1" class="cell">1</div><div id="r0c2" class="cell">3</div><div id="r0c3" class="cell">3</div><div id="r0c4" class="cell">5</div><div id="r0c5" class="cell">8</div><div id="r0c6" class="cell">2</div><div id="r0c7" class="cell">2</div><div id="r0c8" class="cell">3</div><div id="r0c9" class="cell">5</div><div id="r0c10" class="cell">3</div><div id="r0c11" class="cell">1</div></div>
+<div id="r1" class="row"><div id="r1c0" class="cell">0</div><div id="r1c1" class="cell">1</div><div id="r1c2" class="cell">6</div><div id="r1c3" class="cell">9</div><div id="r1c4" class="cell">3</div><div id="r1c5" class="cell">7</div><div id="r1c6" class="cell">3</div><div id="r1c7" class="cell">0</div><div id="r1c8" class="cell">8</div><div id="r1c9" class="cell">4</div><div id="r1c10" class="cell">0</div><div id="r1c11" class="cell">1</div></div>
+<div id="r2" class="row"><div id="r2c0" class="cell">4</div><div id="r2c1" class="cell">8</div><div id="r2c2" class="cell">9</div><div id="r2c3" class="cell">8</div><div id="r2c4" class="cell">2</div><div id="r2c5" class="cell">6</div><div id="r2c6" class="cell">4</div><div id="r2c7" class="cell">5</div><div id="r2c8" class="cell">5</div><div id="r2c9" class="cell">3</div><div id="r2c10" class="cell">8</div><div id="r2c11" class="cell">6</div></div>
+<div id="r3" class="row"><div id="r3c0" class="cell">3</div><div id="r3c1" class="cell">1</div><div id="r3c2" class="cell">4</div><div id="r3c3" class="cell">3</div><div id="r3c4" class="cell">4</div><div id="r3c5" class="cell">2</div><div id="r3c6" class="cell">9</div><div id="r3c7" class="cell">9</div><div id="r3c8" class="cell">3</div><div id="r3c9" class="cell">6</div><div id="r3c10" class="cell">2</div><div id="r3c11" class="cell">4</div></div>
+<div id="r4" class="row"><div id="r4c0" class="cell">3</div><div id="r4c1" class="cell">3</div><div id="r4c2" class="cell">9</div><div id="r4c3" class="cell">3</div><div id="r4c4" class="cell">1</div><div id="r4c5" class="cell">4</div><div id="r4c6" class="cell">8</div><div id="r4c7" class="cell">4</div><div id="r4c8" class="cell">9</div><div id="r4c9" class="cell">8</div><div id="r4c10" class="cell">0</div><div id="r4c11" class="cell">3</div></div>
+<div id="r5" class="row"><div id="r5c0" class="cell">2</div><div id="r5c1" class="cell">9</div><div id="r5c2" class="cell">9</div><div id="r5c3" class="cell">5</div><div id="r5c4" class="cell">9</div><div id="r5c5" class="cell">1</div><div id="r5c6" class="cell">3</div><div id="r5c7" class="cell">9</div><div id="r5c8" class="cell">5</div><div id="r5c9" class="cell">4</div><div id="r5c10" class="cell">0</div><div id="r5c11" class="cell">3</div></div>
+
+</div><!-- end of div digitpanel-->
+
+<div class="equations">
+<div class="current"></div><!-- end of div equation-->
+<div class="history"></div><!-- end of div history-->
+</div><!-- end of div equations-->
+</div><!--end of div game-->
+
+//---------  scoreProcess --------------
+  function scoreProcess(score){
+  }
+//---------  scoreProcess --------------
+<script>
+$(document).ready(function(){
+
+
+  /*variable initialization */
+  var rowCount=6;
+  var colCount=12;
+  var downRow=-1;
+  var downCol=-1;
+  var clearHighlightTimer = 0;
+  var leftOperand = -1;
+  var rightOperand = -1;
+  var result = -1;
+  var leftLocation = [-1,-1,-1]; //row, left, right
+  var rightLocation = [-1,-1,-1];
+  var resultLocation = [-1,-1,-1];
+  var initialHeart=10;
+  var heartScore=1000;
+  var numberCount=0;
+  var totalScore=0;
+  //var chain = false;
+  //var previousValid = "";
+  /*variable initialization */
+
+//---------  clearHighlight  -----------
+  function generateRandomDigits(){
+    for(var i=0;i<rowCount;i++)
+    {
+      for(var j=0;j<colCount;j++)
+      {
+        $("#r"+i+"c"+j).html(Math.floor(Math.random() * 10));
+      }
+    }
+  }
+//---------  clearHighlight  -----------
+
+//---------  clearHighlight  -----------
+  function clearHighlight(){
+    downRow=-1;
+    downCol=-1;
+    moveCol=-1;
+    $("div.cell.highlight").removeClass("highlight");
+  }
+//---------  clearHighlight  -----------
+
+//---------  displayEquation --------------
+function displayEquation(leftOperator, leftOperand, operator, rightOperand, result){
+  var previousValid = leftOperator + leftOperand + " " + operator + " " + rightOperand + " = " + result;
+  $(".history").prepend(previousValid+"<br>");
+  $(".current").html(leftOperator + leftOperand + " " + operator + " " + rightOperand + " = " + result);
+}
+//---------  displayEquation --------------
+
+
+//---------  validateEquation --------------
+  function validateEquation(){
+    if(result==-1){
+      return false;
+    }
+    var previousValid = "";
+    if( leftOperand + rightOperand == result ){
+      previousValid = leftOperand + " + " + rightOperand + " = " + result;
+      $(".history").prepend(previousValid+"<br>");
+      $(".current").html(leftOperand + " + " +rightOperand+ " = " + result);
+    }else if( leftOperand - rightOperand == result ){
+      previousValid = leftOperand + " - " + rightOperand + " = " + result;
+      $(".history").prepend(previousValid+"<br>");
+      $(".current").html(leftOperand + " - " +rightOperand+ " = " + result);
+    }else if( rightOperand - leftOperand == result ){
+      previousValid = "-" + leftOperand + " + " + rightOperand + " = " + result;
+      $(".history").prepend(previousValid+"<br>");
+      $(".current").html("-" + leftOperand + " + " +rightOperand+ " = " + result);
+    }else if( leftOperand * rightOperand == result ){
+      previousValid = leftOperand + " x " + rightOperand + " = " + result;
+      $(".history").prepend(previousValid+"<br>");
+      $(".current").html(leftOperand + " x " +rightOperand+ " = " + result);
+    }else if( leftOperand / rightOperand == result ){
+      previousValid = leftOperand + " / " + rightOperand + " = " + result;
+      $(".history").prepend(previousValid+"<br>");
+      $(".current").html(leftOperand + " / " +rightOperand+ " = " + result);
+    }else{
+      $(".current").html(leftOperand + " ? " +rightOperand+ " = " + result);
+      return false;
+    }
+    updateScore();
+    return true;
+  }
+//---------  validateEquation --------------
+
+
+//---------  updateHeart --------------
+   function updateHeart(){
+      var heartCount=initialHeart - numberCount + Math.floor(totalScore/heartScore);
+      var heartString="";
+      for(var i=0;i<heartCount;i++){
+        heartString += "&hearts;";
+      }
+      $("div.heart").html(heartString);
+   }
+//---------  updateHeart --------------
+
+
+//---------  updateScore --------------
+   function updateScore(){
+     if((leftOperand >0 && rightOperand >0) ||
+     (leftOperand >0 && result >0) || (rightOperand >0 && result >0)){//2 or more not zeros
+      totalScore+= ((leftOperand>0)?leftOperand:0);
+      totalScore+= ((rightOperand>0)?rightOperand:0);
+      totalScore+= ((result>0)?result:0);
+     }
+    $("div.total").html(totalScore);
+  }
+//---------  updateScore --------------
+
+//---------  highlightNumber --------------
+  function highlightNumber(thiscell){
+    var currMoveCol=parseInt(thiscell.substring(3));
+    //console.log("currMoveCol "+currMoveCol);
+    var overlap=false;
+    if(downCol < currMoveCol){
+      for(var j=0;j<colCount;j++)
+      {
+        if(downCol <= j && j <= currMoveCol){
+          if($("#r"+downRow+"c"+j).hasClass("inoperand")){
+            overlap=true;
+          }
+          if(!overlap){
+            $("#r"+downRow+"c"+j).addClass("highlight");
+            //console.log("addHighlight "+"#r"+downRow+"c"+j);
+          }else{
+            $("#r"+downRow+"c"+j).removeClass("highlight");
+          }
+        }else{
+          $("#r"+downRow+"c"+j).removeClass("highlight");
+        }
+      }
+    }else{
+      for(var j=colCount-1;j>=0;j--)
+      {
+        if(currMoveCol <= j && j <= downCol){
+          if($("#r"+downRow+"c"+j).hasClass("inoperand")){
+            overlap=true;
+          }
+          if(!overlap){
+            $("#r"+downRow+"c"+j).addClass("highlight");
+          }else{
+            $("#r"+downRow+"c"+j).removeClass("highlight");
+          }
+        }else{
+          $("#r"+downRow+"c"+j).removeClass("highlight");
+        }
+      }
+    }
+    return overlap;
+  }
+//---------  highlightNumber --------------
+
+//---------  addOperand ---------------
+//read the highlighted number and call placeOperand
+function addOperand(){
+  var tempStr="";
+  var leftPos=-1;
+  var rightPos=-1;
+  for(var j=colCount-1;j>=0;j--){
+  //in downRow add all the highlight digits
+  //check for leading zero and only allow one zero
+    if($("#r"+downRow+"c"+j).hasClass("highlight")){
+      if(rightPos<0){ rightPos=j; }
+      //tempStr=$("#r"+downRow+"c"+j).html()+tempStr;
+      //$("#r"+downRow+"c"+j).addClass("inoperand");
+      leftPos=j;
+    }else if(leftPos > 0){
+      break;
+    }
+  }
+  if(rightPos<0 || leftPos<0){
+    console.log("addOperand no highlight");
+    clearHighlight();
+    return;
+  }
+  for(var j=leftPos;j<rightPos;j++){
+    if($("#r"+downRow+"c"+j).html()=="0" && tempStr.length<=0){
+      leftPos=leftPos+1;
+      $("#r"+downRow+"c"+j).removeClass("highlight");
+      continue;
+    }
+    tempStr=tempStr+$("#r"+downRow+"c"+j).html()
+    $("#r"+downRow+"c"+j).addClass("inoperand");
+  }
+  tempStr=tempStr+$("#r"+downRow+"c"+rightPos).html()
+  $("#r"+downRow+"c"+rightPos).addClass("inoperand");
+
+  var newOperand=parseInt(tempStr);
+  console.log("newOperand: "+newOperand+" #r"+downRow+"c"+leftPos+" #r"+downRow+"c"+rightPos);
+  placeOperand(newOperand, leftPos, rightPos);
+
+}
+//---------  addOperand ---------------
+
+//---------  operandCSS ---------------
+function operandCSS(row, leftPos, rightPos, operandCSSClass){
+  if(operandCSSClass.length==0){
+    for(var j=leftPos;j<=rightPos;j++){
+      $("#r"+row+"c"+j).removeClass("leftOperand");
+      $("#r"+row+"c"+j).removeClass("rightOperand");
+      $("#r"+row+"c"+j).removeClass("result");
+      $("#r"+row+"c"+j).removeClass("inoperand");
+    }
+  }else{
+    for(var j=leftPos;j<=rightPos;j++){
+      $("#r"+row+"c"+j).removeClass("leftOperand");
+      $("#r"+row+"c"+j).removeClass("rightOperand");
+      $("#r"+row+"c"+j).removeClass("result");
+      $("#r"+row+"c"+j).addClass(operandCSSClass);
+    }
+  }
+}
+//---------  operandCSS ---------------
+
+//---------  placeOperand -------------
+//place operand in equation
+function placeOperand(newOperand, leftPos, rightPos){
+  numberCount++;
+  if(leftOperand==-1){
+    leftOperand=newOperand;
+    leftLocation=[downRow, leftPos, rightPos];
+    operandCSS(downRow,leftPos,rightPos,"leftOperand");
+  }else if(rightOperand==-1){
+    rightOperand=newOperand;
+    rightLocation=[downRow, leftPos, rightPos];
+    operandCSS(downRow,leftPos,rightPos,"rightOperand");
+  }else if(result==-1){
+    result=newOperand;
+    resultLocation=[downRow, leftPos, rightPos];
+    operandCSS(downRow,leftPos,rightPos,"result");
+  }else{
+    operandCSS(leftLocation[0],leftLocation[1],leftLocation[2],"");
+    leftOperand=rightOperand;
+    leftLocation=[rightLocation[0],rightLocation[1],rightLocation[2]];
+    operandCSS(leftLocation[0],leftLocation[1],leftLocation[2],"leftOperand");
+    rightOperand=result;
+    rightLocation=[resultLocation[0],resultLocation[1],resultLocation[2]];
+    operandCSS(rightLocation[0],rightLocation[1],rightLocation[2],"rightOperand");
+    result=newOperand;
+    resultLocation=[downRow, leftPos, rightPos];
+    operandCSS(resultLocation[0],resultLocation[1],resultLocation[2],"result");
+  }
+  console.log("placeOperand "+leftOperand+","+leftLocation+
+    ";"+rightOperand+","+rightLocation+";"+result+","+resultLocation);
+}
+//---------  placeOperand -------------
+
+//---------  mousedown  -----------
+// click left most digit, then right most digit to select number
+// click another row to cancel
+  $("div.cell").mousedown(function(event){
+    var thiscell=$(this).attr("id");
+    console.log("mouseDown: "+thiscell + " " + downRow);
+    //new first  click or second click on different row,
+    //make sure this is not inoperand
+    if(downRow <= -1 || downRow != thiscell.substring(1,2)){
+      clearHighlight();
+      if(!$(this).hasClass("inoperand"))
+      {
+        downRow=parseInt(thiscell.substring(1,2));
+        downCol=parseInt(thiscell.substring(3));
+        $(this).addClass("highlight");
+      }
+    }else{
+      //select number between the columns if there is no overlap
+      var overlap=highlightNumber(thiscell);
+      if(!overlap){
+        addOperand();
+        validateEquation();
+        updateHeart();
+      }
+      clearHighlight();
+    }
+  });
+//---------  mousedown  -----------
+
+//---------  mouseover  -----------
+// highlight cells between  [downRow, downCol] and this cell
+//if this does not cross inoperand cell
+  $("div.cell").mouseover(function(event){
+    if(downRow > -1){
+      var thiscell=$(this).attr("id");
+      var overlap=highlightNumber(thiscell);
+    }
+  });
+//---------  mouseover  -----------
+
+
+
+  /*initialize gamepanel */
+  //generate random digits
+  generateRandomDigits();
+  updateScore();
+  updateHeart();
+  /*initialize gamepanel */
+});
+</script>
+<footer>
+started on 20180212, 20180301<br>
+highlight case:
+downCol
+</footer>
+
+</body></html>
