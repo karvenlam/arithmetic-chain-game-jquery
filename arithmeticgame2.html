@@ -65,14 +65,39 @@ div.game
   font-size:2em;
   width:100%; max-width:800px; min-width:400px;
 }
+div.score{
+  font-family: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+  display:flex;
+  width:100%;
+}
+div.heart{
+  text-align:left;
+  width:50%;
+  padding: 0 20px;
+}
+div.total{
+  text-align:right;
+  width:50%;
+  padding: 0 20px;
+}
+div.digitpanel
+{
+  position:relative;
+  display:block;
+  justify-content: center;
+  margin:0 auto;
+}
+div.row{
+}
 div.cell
 {
-  display:inline-block;
+  display:inline-flex;
     -webkit-user-select: none; /* Safari 3.1+ */
     -moz-user-select: none; /* Firefox 2+ */
     -ms-user-select: none; /* IE 10+ */
     user-select: none; /* Standard syntax */
     text-shadow: 1px 1px 2px #AAAAAA;
+    padding: 0px 1px;
 }
 div.highlight
 {
@@ -103,20 +128,6 @@ div.current
   background-color: #EEEEFF;
   font-size:1.2em;
   vertical-align:bottom;
-}
-div.score{
-  font-family: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
-  display:flex;
-}
-div.heart{
-  text-align:left;
-  width:50%;
-  padding: 0 20px;
-}
-div.total{
-  text-align:right;
-  width:50%;
-  padding: 0 20px;
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -229,11 +240,11 @@ $(document).ready(function(){
 //---------  clearHighlight  -----------
 
 //---------  displayEquation --------------
-function displayEquation(leftOperator, leftOperand, operator, rightOperand, result){
-  var previousValid = leftOperator + leftOperand + " " + operator + " " + rightOperand + " = " + result;
-  $(".history").prepend(previousValid+"<br>");
-  $(".current").html(leftOperator + leftOperand + " " + operator + " " + rightOperand + " = " + result);
-}
+  function displayEquation(leftOperator, leftOperand, operator, rightOperand, result){
+    var previousValid = leftOperator + leftOperand + " " + operator + " " + rightOperand + " = " + result;
+    $(".history").prepend(previousValid+"<br>");
+    $(".current").html(leftOperator + leftOperand + " " + operator + " " + rightOperand + " = " + result);
+  }
 //---------  displayEquation --------------
 
 
@@ -274,19 +285,19 @@ function displayEquation(leftOperator, leftOperand, operator, rightOperand, resu
 
 
 //---------  updateHeart --------------
-   function updateHeart(){
-      var heartCount=initialHeart - numberCount + Math.floor(totalScore/heartScore);
-      var heartString="";
-      for(var i=0;i<heartCount;i++){
-        heartString += "&hearts;";
-      }
-      $("div.heart").html(heartString);
-   }
+  function updateHeart(){
+    var heartCount=initialHeart - numberCount + Math.floor(totalScore/heartScore);
+    var heartString="";
+    for(var i=0;i<heartCount;i++){
+      heartString += "&hearts;";
+    }
+    $("div.heart").html(heartString);
+  }
 //---------  updateHeart --------------
 
 
 //---------  updateScore --------------
-   function updateScore(){
+  function updateScore(){
      if((leftOperand >0 && rightOperand >0) ||
      (leftOperand >0 && result >0) || (rightOperand >0 && result >0)){//2 or more not zeros
       totalScore+= ((leftOperand>0)?leftOperand:0);
@@ -342,98 +353,115 @@ function displayEquation(leftOperator, leftOperand, operator, rightOperand, resu
 
 //---------  addOperand ---------------
 //read the highlighted number and call placeOperand
-function addOperand(){
-  var tempStr="";
-  var leftPos=-1;
-  var rightPos=-1;
-  for(var j=colCount-1;j>=0;j--){
-  //in downRow add all the highlight digits
-  //check for leading zero and only allow one zero
-    if($("#r"+downRow+"c"+j).hasClass("highlight")){
-      if(rightPos<0){ rightPos=j; }
-      //tempStr=$("#r"+downRow+"c"+j).html()+tempStr;
-      //$("#r"+downRow+"c"+j).addClass("inoperand");
-      leftPos=j;
-    }else if(leftPos > 0){
-      break;
+  function addOperand(){
+    var tempStr="";
+    var leftPos=-1;
+    var rightPos=-1;
+    for(var j=colCount-1;j>=0;j--){
+    //in downRow add all the highlight digits
+    //check for leading zero and only allow one zero
+      if($("#r"+downRow+"c"+j).hasClass("highlight")){
+        if(rightPos<0){ rightPos=j; }
+        //tempStr=$("#r"+downRow+"c"+j).html()+tempStr;
+        //$("#r"+downRow+"c"+j).addClass("inoperand");
+        leftPos=j;
+      }else if(leftPos > 0){
+        break;
+      }
     }
-  }
-  if(rightPos<0 || leftPos<0){
-    console.log("addOperand no highlight");
-    clearHighlight();
-    return;
-  }
-  for(var j=leftPos;j<rightPos;j++){
-    if($("#r"+downRow+"c"+j).html()=="0" && tempStr.length<=0){
-      leftPos=leftPos+1;
-      $("#r"+downRow+"c"+j).removeClass("highlight");
-      continue;
+    if(rightPos<0 || leftPos<0){
+      console.log("addOperand no highlight");
+      clearHighlight();
+      return;
     }
-    tempStr=tempStr+$("#r"+downRow+"c"+j).html()
-    $("#r"+downRow+"c"+j).addClass("inoperand");
+    for(var j=leftPos;j<rightPos;j++){
+      if($("#r"+downRow+"c"+j).html()=="0" && tempStr.length<=0){
+        leftPos=leftPos+1;
+        $("#r"+downRow+"c"+j).removeClass("highlight");
+        continue;
+      }
+      tempStr=tempStr+$("#r"+downRow+"c"+j).html()
+      $("#r"+downRow+"c"+j).addClass("inoperand");
+    }
+    tempStr=tempStr+$("#r"+downRow+"c"+rightPos).html()
+    $("#r"+downRow+"c"+rightPos).addClass("inoperand");
+
+    var newOperand=parseInt(tempStr);
+    console.log("newOperand: "+newOperand+" #r"+downRow+"c"+leftPos+" #r"+downRow+"c"+rightPos);
+    placeOperand(newOperand, leftPos, rightPos);
+
   }
-  tempStr=tempStr+$("#r"+downRow+"c"+rightPos).html()
-  $("#r"+downRow+"c"+rightPos).addClass("inoperand");
-
-  var newOperand=parseInt(tempStr);
-  console.log("newOperand: "+newOperand+" #r"+downRow+"c"+leftPos+" #r"+downRow+"c"+rightPos);
-  placeOperand(newOperand, leftPos, rightPos);
-
-}
 //---------  addOperand ---------------
 
 //---------  operandCSS ---------------
-function operandCSS(row, leftPos, rightPos, operandCSSClass){
-  if(operandCSSClass.length==0){
-    for(var j=leftPos;j<=rightPos;j++){
-      $("#r"+row+"c"+j).removeClass("leftOperand");
-      $("#r"+row+"c"+j).removeClass("rightOperand");
-      $("#r"+row+"c"+j).removeClass("result");
-      $("#r"+row+"c"+j).removeClass("inoperand");
-    }
-  }else{
-    for(var j=leftPos;j<=rightPos;j++){
-      $("#r"+row+"c"+j).removeClass("leftOperand");
-      $("#r"+row+"c"+j).removeClass("rightOperand");
-      $("#r"+row+"c"+j).removeClass("result");
-      $("#r"+row+"c"+j).addClass(operandCSSClass);
+  function operandCSS(row, leftPos, rightPos, operandCSSClass){
+    if(operandCSSClass.length==0){
+      for(var j=leftPos;j<=rightPos;j++){
+        $("#r"+row+"c"+j).removeClass("leftOperand");
+        $("#r"+row+"c"+j).removeClass("rightOperand");
+        $("#r"+row+"c"+j).removeClass("result");
+        $("#r"+row+"c"+j).removeClass("inoperand");
+      }
+    }else{
+      for(var j=leftPos;j<=rightPos;j++){
+        $("#r"+row+"c"+j).removeClass("leftOperand");
+        $("#r"+row+"c"+j).removeClass("rightOperand");
+        $("#r"+row+"c"+j).removeClass("result");
+        $("#r"+row+"c"+j).addClass(operandCSSClass);
+      }
     }
   }
-}
 //---------  operandCSS ---------------
 
 //---------  placeOperand -------------
 //place operand in equation
-function placeOperand(newOperand, leftPos, rightPos){
-  numberCount++;
-  if(leftOperand==-1){
-    leftOperand=newOperand;
-    leftLocation=[downRow, leftPos, rightPos];
-    operandCSS(downRow,leftPos,rightPos,"leftOperand");
-  }else if(rightOperand==-1){
-    rightOperand=newOperand;
-    rightLocation=[downRow, leftPos, rightPos];
-    operandCSS(downRow,leftPos,rightPos,"rightOperand");
-  }else if(result==-1){
-    result=newOperand;
-    resultLocation=[downRow, leftPos, rightPos];
-    operandCSS(downRow,leftPos,rightPos,"result");
-  }else{
-    operandCSS(leftLocation[0],leftLocation[1],leftLocation[2],"");
-    leftOperand=rightOperand;
-    leftLocation=[rightLocation[0],rightLocation[1],rightLocation[2]];
-    operandCSS(leftLocation[0],leftLocation[1],leftLocation[2],"leftOperand");
-    rightOperand=result;
-    rightLocation=[resultLocation[0],resultLocation[1],resultLocation[2]];
-    operandCSS(rightLocation[0],rightLocation[1],rightLocation[2],"rightOperand");
-    result=newOperand;
-    resultLocation=[downRow, leftPos, rightPos];
-    operandCSS(resultLocation[0],resultLocation[1],resultLocation[2],"result");
+  function placeOperand(newOperand, leftPos, rightPos){
+    numberCount++;
+    if(leftOperand==-1){
+      leftOperand=newOperand;
+      leftLocation=[downRow, leftPos, rightPos];
+      operandCSS(downRow,leftPos,rightPos,"leftOperand");
+    }else if(rightOperand==-1){
+      rightOperand=newOperand;
+      rightLocation=[downRow, leftPos, rightPos];
+      operandCSS(downRow,leftPos,rightPos,"rightOperand");
+    }else if(result==-1){
+      result=newOperand;
+      resultLocation=[downRow, leftPos, rightPos];
+      operandCSS(downRow,leftPos,rightPos,"result");
+    }else{
+      operandCSS(leftLocation[0],leftLocation[1],leftLocation[2],"");
+      leftOperand=rightOperand;
+      leftLocation=[rightLocation[0],rightLocation[1],rightLocation[2]];
+      operandCSS(leftLocation[0],leftLocation[1],leftLocation[2],"leftOperand");
+      rightOperand=result;
+      rightLocation=[resultLocation[0],resultLocation[1],resultLocation[2]];
+      operandCSS(rightLocation[0],rightLocation[1],rightLocation[2],"rightOperand");
+      result=newOperand;
+      resultLocation=[downRow, leftPos, rightPos];
+      operandCSS(resultLocation[0],resultLocation[1],resultLocation[2],"result");
+    }
+    console.log("placeOperand "+leftOperand+","+leftLocation+
+      ";"+rightOperand+","+rightLocation+";"+result+","+resultLocation);
   }
-  console.log("placeOperand "+leftOperand+","+leftLocation+
-    ";"+rightOperand+","+rightLocation+";"+result+","+resultLocation);
-}
 //---------  placeOperand -------------
+
+//---------  replaceDigit -------------
+//remove this digit, shift
+  function replaceDigit(rowNum, colNum){
+    //remove current digit
+    //shift subsqeunt cells left
+    //replace digits,
+    //for(var j=)
+
+  }
+//---------  replaceDigit -------------
+
+//---------  replaceNumbers -------------
+  function replaceNumbers(){
+
+  }
+//---------  replaceNumbers -------------
 
 //---------  mousedown  -----------
 // click left most digit, then right most digit to select number
@@ -456,7 +484,9 @@ function placeOperand(newOperand, leftPos, rightPos){
       var overlap=highlightNumber(thiscell);
       if(!overlap){
         addOperand();
-        validateEquation();
+        if(validateEquation()){
+          //replaceNumber
+        }
         updateHeart();
       }
       clearHighlight();
@@ -475,14 +505,26 @@ function placeOperand(newOperand, leftPos, rightPos){
   });
 //---------  mouseover  -----------
 
+//--------- initializeGamePanel ------------
+  function initializeGamePanel(){
+    /*initialize gamepanel */
+    //generate random digits
+    generateRandomDigits();
+    updateScore();
+    updateHeart();
+    /*initialize gamepanel */
+  }
+//--------- initializeGamePanel ------------
 
+  initializeGamePanel();
 
-  /*initialize gamepanel */
-  //generate random digits
-  generateRandomDigits();
-  updateScore();
-  updateHeart();
-  /*initialize gamepanel */
+  //$("#r1c1").css({marginLeft:"15px"});
+  //$("#r1c1").slideUp();
+  $("#r1c1").animate({height:"0"},{
+    complete: function(){
+      //// TODO: 
+    }
+  });
 });
 </script>
 <footer>
