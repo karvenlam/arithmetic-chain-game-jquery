@@ -446,14 +446,35 @@ $(document).ready(function(){
   }
 //---------  placeOperand -------------
 
+
+  /*$("#r1c1").animate({height:"toggle"},{
+    complete: function(){
+      for(var j=1;j<colCount-1;j++){
+        $("#r1c"+j).html($("#r1c"+(j+1)).html());
+        $("#r1c"+j).attr("class",$("#r1c"+(j+1)).attr("class"));
+      }
+      $("#r1c"+(colCount-1)).html(Math.floor(Math.random() * 10));
+      $("#r1c"+(colCount-1)).attr("class","cell");
+      $("#r1c1").toggle();
+    }
+  });*/
 //---------  replaceDigit -------------
 //remove this digit, shift
   function replaceDigit(rowNum, colNum){
     //remove current digit
     //shift subsqeunt cells left
     //replace digits,
-    //for(var j=)
-
+    $("#r"+rowNum+"c"+colNum).animate({height:"toggle"},{
+      complete: function(){
+        for(var j=colNum;j<colCount-1;j++){
+          $("#r"+rowNum+"c"+j).html($("#r"+rowNum+"c"+(j+1)).html());
+          $("#r"+rowNum+"c"+j).attr("class",$("#r"+rowNum+"c"+(j+1)).attr("class"));
+        }
+        $("#r"+rowNum+"c"+(colCount-1)).html(Math.floor(Math.random() * 10));
+        $("#r"+rowNum+"c"+(colCount-1)).attr("class","cell");
+        $("#r"+rowNum+"c"+j).toggle();
+      }
+    });
   }
 //---------  replaceDigit -------------
 
@@ -518,13 +539,6 @@ $(document).ready(function(){
 
   initializeGamePanel();
 
-  //$("#r1c1").css({marginLeft:"15px"});
-  //$("#r1c1").slideUp();
-  $("#r1c1").animate({height:"0"},{
-    complete: function(){
-      //// TODO: 
-    }
-  });
 });
 </script>
 <footer>
