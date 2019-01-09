@@ -467,6 +467,7 @@ $(document).ready(function(){
     $("#r"+rowNum+"c"+colNum).animate({height:"toggle"},{
       complete: function(){
         for(var j=colNum;j<colCount-1;j++){
+          //// TODO: update Locations
           $("#r"+rowNum+"c"+j).html($("#r"+rowNum+"c"+(j+1)).html());
           $("#r"+rowNum+"c"+j).attr("class",$("#r"+rowNum+"c"+(j+1)).attr("class"));
         }
@@ -480,7 +481,9 @@ $(document).ready(function(){
 
 //---------  replaceNumbers -------------
   function replaceNumbers(){
-
+    for(var j=0;j<=leftLocation[2]-leftLocation[1];j++){
+      //call replace digit and shiftLeft
+    }
   }
 //---------  replaceNumbers -------------
 
