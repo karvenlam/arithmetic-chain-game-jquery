@@ -196,9 +196,13 @@ $(document).ready(function(){
   var leftOperand = -1;
   var rightOperand = -1;
   var result = -1;
-  var leftLocation = [-1,-1,-1]; //row, left, right
-  var rightLocation = [-1,-1,-1];
-  var resultLocation = [-1,-1,-1];
+  var leftL=0;
+  var rightL=1;
+  var resultL=2;
+  var locations=[[-1,-1,-1],[-1,-1,-1],[-1,-1,-1]]; //row, left, right
+  //var leftLocation = [-1,-1,-1]; //row, left, right
+  //var rightLocation = [-1,-1,-1];
+  //var resultLocation = [-1,-1,-1];
   var initialHeart=10;
   var heartScore=100;
   var numberCount=0;
@@ -419,30 +423,30 @@ $(document).ready(function(){
     numberCount++;
     if(leftOperand==-1){
       leftOperand=newOperand;
-      leftLocation=[downRow, leftPos, rightPos];
+      locations[leftL]=[downRow, leftPos, rightPos];
       operandCSS(downRow,leftPos,rightPos,"leftOperand");
     }else if(rightOperand==-1){
       rightOperand=newOperand;
-      rightLocation=[downRow, leftPos, rightPos];
+      locations[rightL]=[downRow, leftPos, rightPos];
       operandCSS(downRow,leftPos,rightPos,"rightOperand");
     }else if(result==-1){
       result=newOperand;
-      resultLocation=[downRow, leftPos, rightPos];
+      locations[resultL]=[downRow, leftPos, rightPos];
       operandCSS(downRow,leftPos,rightPos,"result");
     }else{
-      operandCSS(leftLocation[0],leftLocation[1],leftLocation[2],"");
+      operandCSS(locations[leftL][0],locations[leftL][1],locations[leftL][2],"");
       leftOperand=rightOperand;
-      leftLocation=[rightLocation[0],rightLocation[1],rightLocation[2]];
-      operandCSS(leftLocation[0],leftLocation[1],leftLocation[2],"leftOperand");
+      locations[leftL]=[locations[rightL][0],locations[rightL][1],locations[rightL][2]];
+      operandCSS(locations[leftL][0],locations[leftL][1],locations[leftL][2],"leftOperand");
       rightOperand=result;
-      rightLocation=[resultLocation[0],resultLocation[1],resultLocation[2]];
-      operandCSS(rightLocation[0],rightLocation[1],rightLocation[2],"rightOperand");
+      locations[rightL]=[locations[resultL][0],locations[resultL][1],locations[resultL][2]];
+      operandCSS(locations[rightL][0],locations[rightL][1],locations[rightL][2],"rightOperand");
       result=newOperand;
-      resultLocation=[downRow, leftPos, rightPos];
-      operandCSS(resultLocation[0],resultLocation[1],resultLocation[2],"result");
+      locations[resultL]=[downRow, leftPos, rightPos];
+      operandCSS(locations[resultL][0],locations[resultL][1],locations[resultL][2],"result");
     }
-    console.log("placeOperand "+leftOperand+","+leftLocation+
-      ";"+rightOperand+","+rightLocation+";"+result+","+resultLocation);
+    console.log("placeOperand "+leftOperand+","+locations[leftL]+
+      ";"+rightOperand+","+locations[rightL]+";"+result+","+locations[resultL]);
   }
 //---------  placeOperand -------------
 
@@ -468,6 +472,11 @@ $(document).ready(function(){
       complete: function(){
         for(var j=colNum;j<colCount-1;j++){
           //// TODO: update Locations
+          if($("#r"+rowNum+"c"+j).hasClass("inoperand") &&    !$("#r"+rowNum+"c"+(j+1)).hasClass("inoperand")){
+
+          }else if(!$("#r"+rowNum+"c"+j).hasClass("inoperand") &&    $("#r"+rowNum+"c"+(j+1)).hasClass("inoperand")){
+
+          }
           $("#r"+rowNum+"c"+j).html($("#r"+rowNum+"c"+(j+1)).html());
           $("#r"+rowNum+"c"+j).attr("class",$("#r"+rowNum+"c"+(j+1)).attr("class"));
         }
@@ -481,9 +490,9 @@ $(document).ready(function(){
 
 //---------  replaceNumbers -------------
   function replaceNumbers(){
-    for(var j=0;j<=leftLocation[2]-leftLocation[1];j++){
+    //for(var j=0;j<=leftLocation[2]-leftLocation[1];j++){
       //call replace digit and shiftLeft
-    }
+    //}
   }
 //---------  replaceNumbers -------------
 
