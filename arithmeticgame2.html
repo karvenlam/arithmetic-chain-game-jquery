@@ -464,38 +464,21 @@ $(document).ready(function(){
   });*/
 //---------  replaceDigit -------------
 //remove this digit, shift
-  function replaceDigit(rowNum, colNum){
+  function replaceDigit(rowNum, colNum, counter){
     //remove current digit
     //shift subsqeunt cells left
     //replace digits,
-    $("#r"+rowNum+"c"+colNum).animate({height:"toggle"},{
+    $("#r"+rowNum+"c"+colNum).delay(counter*300).animate({height:"toggle"},{
+      duration:300,
       complete: function(){
         for(var j=colNum;j<colCount-1;j++){
           $("#r"+rowNum+"c"+j).html($("#r"+rowNum+"c"+(j+1)).html());
           $("#r"+rowNum+"c"+j).attr("class",$("#r"+rowNum+"c"+(j+1)).attr("class"));
         }
 
-        //// TODO: update Locations, do I really care, should all be removed after replaceNumbers
-        /*for(var i=0;i<3;i++){
-          if(locations[i][0]==rowNum){
-            if(locations[i][1]>=colNum){
-              //should have shifted one spot to the left
-              if(locations[i][1]>colNum){
-                locations[i][1]--;
-              }
-              if(locations[i][2]>colNum){
-                locations[i][2]--;
-              }
-            }else if(locations[i][2]>=colNum){
-              //starting column < colNum and ending column > colNum, error, should not be here
-            }
-
-          }
-        }
-        */
         $("#r"+rowNum+"c"+(colCount-1)).html(Math.floor(Math.random() * 10));
         $("#r"+rowNum+"c"+(colCount-1)).attr("class","cell");
-        $("#r"+rowNum+"c"+j).toggle();
+        $("#r"+rowNum+"c"+colNum).toggle();
       }
     });
   }
@@ -503,12 +486,13 @@ $(document).ready(function(){
 
 //---------  replaceNumbers -------------
   function replaceNumbers(){
-    //todo need to make this into recursive
+    var counter=0;
     for(var i=0;i<3;i++){
       for(var j=0;j<=locations[i][2]-locations[i][1];j++){
         //call replace digit and shiftLeft
         if(locations[i][0]>-1){
-          replaceDigit(locations[i][0],locations[i][1]);
+          replaceDigit(locations[i][0],locations[i][1], counter);
+          counter++;
         }
       }
     }
