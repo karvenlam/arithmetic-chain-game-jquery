@@ -469,7 +469,8 @@ $(document).ready(function(){
     //shift subsqeunt cells left
     //replace digits,
     $("#r"+rowNum+"c"+colNum).delay(counter*300).animate({height:"toggle"},{
-      duration:300,
+      duration:100,
+      queue: "replaceDigitAnimation",
       complete: function(){
         for(var j=colNum;j<colCount-1;j++){
           $("#r"+rowNum+"c"+j).html($("#r"+rowNum+"c"+(j+1)).html());
@@ -495,7 +496,10 @@ $(document).ready(function(){
           counter++;
         }
       }
+
+      counter++;
     }
+    $("#digitpanel").dequeue("replaceDigitAnimation");
     locations=[[-1,-1,-1],[-1,-1,-1],[-1,-1,-1]]; //row, left, right
   }
 //---------  replaceNumbers -------------
