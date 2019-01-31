@@ -213,6 +213,7 @@ $(document).ready(function(){
 
 //---------  clearHighlight  -----------
   function generateRandomDigits(){
+
     for(var i=0;i<6;i++)
     {
       for(var j=0;j<12;j++)
@@ -470,7 +471,6 @@ $(document).ready(function(){
     //replace digits,
     $("#r"+rowNum+"c"+colNum).delay(counter*300).animate({height:"toggle"},{
       duration:100,
-      queue: "replaceDigitAnimation",
       complete: function(){
         for(var j=colNum;j<colCount-1;j++){
           $("#r"+rowNum+"c"+j).html($("#r"+rowNum+"c"+(j+1)).html());
@@ -479,7 +479,7 @@ $(document).ready(function(){
 
         $("#r"+rowNum+"c"+(colCount-1)).html(Math.floor(Math.random() * 10));
         $("#r"+rowNum+"c"+(colCount-1)).attr("class","cell");
-        $("#r"+rowNum+"c"+colNum).toggle();
+        $("#r"+rowNum+"c"+colNum).toggle(0);
       }
     });
   }
@@ -487,12 +487,58 @@ $(document).ready(function(){
 
 //---------  replaceNumbers -------------
   function replaceNumbers(){
+    for(var i=0;i<3;i++){
+      for(var j=0;j<=locations[i][2]-locations[i][1];j++){
+        //call replace digit and shiftLeft
+        if(locations[i][0]>-1){
+          (function(){ //iife
+            var k=i;
+            var rowNum=locations[k][0];
+            var colNum=locations[k][1];
+            var delayDuration=500;
+            console.log("replaceNumbers aq "+"#r"+rowNum+"c"+colNum);
+            $(".digitpanel").queue("replaceDigitAnimation",function(next){
+
+                console.log("replaceNumbers q1 "+"#r"+rowNum+"c"+colNum);
+                $("#r"+rowNum+"c"+colNum).animate({height:"toggle"},{duration:delayDuration});
+                next();
+              })
+              .delay(delayDuration,"replaceDigitAnimation")
+              .queue("replaceDigitAnimation",function(next){
+                console.log("replaceNumbers q2 "+"#r"+rowNum+"c"+colNum);
+                for(var x=colNum;x<colCount-1;x++){
+                  $("#r"+rowNum+"c"+x).html($("#r"+rowNum+"c"+(x+1)).html());
+                  $("#r"+rowNum+"c"+x).attr("class",$("#r"+rowNum+"c"+(x+1)).attr("class"));
+                }
+
+                $("#r"+rowNum+"c"+(colCount-1)).html(Math.floor(Math.random() * 10));
+                $("#r"+rowNum+"c"+(colCount-1)).attr("class","cell");
+                next();
+              })
+              .queue("replaceDigitAnimation",function(next){
+                console.log("replaceNumbers q3 "+"#r"+rowNum+"c"+colNum);
+                $("#r"+rowNum+"c"+colNum).toggle(500);
+                next();
+              })
+              .delay(delayDuration,"replaceDigitAnimation");
+
+          })();//end if iife
+
+        }
+      }
+    }
+    console.log("replaceNumbers "+$(".digitpanel").queue("replaceDigitAnimation"));
+    $(".digitpanel").dequeue("replaceDigitAnimation");
+    locations=[[-1,-1,-1],[-1,-1,-1],[-1,-1,-1]]; //row, left, right
+  }
+
+  function replaceNumbersa(){
     var counter=0;
     for(var i=0;i<3;i++){
       for(var j=0;j<=locations[i][2]-locations[i][1];j++){
         //call replace digit and shiftLeft
         if(locations[i][0]>-1){
-          replaceDigit(locations[i][0],locations[i][1], counter);
+          $("#digitpanel").queue("replaceDigitAnimation",replaceDigit(locations[i][0],locations[i][1], counter));
           counter++;
         }
       }
