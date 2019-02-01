@@ -83,11 +83,13 @@ div.total{
 div.digitpanel
 {
   position:relative;
-  display:block;
-  justify-content: center;
-  margin:0 auto;
+  text-align:left;
+  /*justify-content: center;*/
+  margin: auto;
 }
 div.row{
+  text-align:left;
+  display:block;
 }
 div.cell
 {
@@ -232,6 +234,7 @@ $(document).ready(function(){
         $("#r"+i+"c"+j).html(Math.floor(Math.random() * 10));
       }
     }
+    $(".digitpanel").width($(".cell").width*colCount);
   }
 //---------  clearHighlight  -----------
 
@@ -491,17 +494,18 @@ $(document).ready(function(){
       for(var j=0;j<=locations[i][2]-locations[i][1];j++){
         //call replace digit and shiftLeft
         if(locations[i][0]>-1){
-          (function(){ //iife
-            var k=i;
-            var rowNum=locations[k][0];
-            var colNum=locations[k][1];
-            var delayDuration=500;
+          //(function(){ //iife
+          {
+            let k=i;
+            let rowNum=locations[k][0];
+            let colNum=locations[k][1];
+            let delayDuration=500;
             console.log("replaceNumbers aq "+"#r"+rowNum+"c"+colNum);
             $(".digitpanel").queue("replaceDigitAnimation",function(next){
 
                 console.log("replaceNumbers q1 "+"#r"+rowNum+"c"+colNum);
-                $("#r"+rowNum+"c"+colNum).animate({height:"toggle"},{duration:delayDuration});
-                next();
+                $("#r"+rowNum+"c"+colNum).animate({width:$("#r"+rowNum+"c"+colNum).width()/2},{duration:delayDuration});
+                //next();
               })
               .delay(delayDuration,"replaceDigitAnimation")
               .queue("replaceDigitAnimation",function(next){
@@ -521,8 +525,8 @@ $(document).ready(function(){
                 next();
               })
               .delay(delayDuration,"replaceDigitAnimation");
-
-          })();//end if iife
+          }
+          //})();//end if iife
 
         }
       }
