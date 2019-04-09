@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)http://ravenlamb.com/games/arithmeticgame2.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Arithmetic Chain Game 2</title>
+<title>Arithmetic Chain Game 3</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style type="text/css">
@@ -11,6 +10,22 @@ body {
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<style>
+.full{
+  width:100%;
+}
+.center{
+  margin-left: auto;
+  margin-right: auto;
+}
+.cell-absolute{
+  display:inline-block;
+}
+.absolute{
+  display:absolute;
+}
+</style>
 </head>
 
 <body>
@@ -58,5 +73,33 @@ Stat full width
 
 <footer>
 </footer>
+
+<script>
+$(document).ready(function(){
+  var rowCount=4;
+  var colCount=4;
+
+  //generateRandomDigits
+  function generateRandomDigits(){
+    var temp="";
+    for(var i=0;i<rowCount;i++){
+      temp+="<div id='r"+i+"' class='row'>";
+      for(var j=0;j<colCount;j++){
+        temp+="<div class='cell-absolute'>";
+        temp+="<div id='r"+i+"c"+j+"' class='cell-data'>";
+        temp+=Math.floor(Math.random() * 10);
+        temp+="</div></div>";
+      }
+      temp+="</div>";
+    }
+    $("div.panel.center").html(temp);
+  }
+
+/************************************************************************/
+generateRandomDigits();
+
+
+});
+</script>
 
 </body></html>
