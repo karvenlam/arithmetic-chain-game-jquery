@@ -12,18 +12,65 @@ body {
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <style>
+body{
+  font-size:16px;
+}
 .full{
   width:100%;
+  margin:2% 0;
 }
 .center{
   margin-left: auto;
   margin-right: auto;
+  max-width:800px;
+  background-color:#f4f4f4;
+}
+.left{
+  text-align:left;
+}
+.right{
+  text-align:right;
+}
+.game.center{
+  padding:5px;
+  border:1px solid #CCCCCC;
+}
+.stat{
+  position:relative;
+  display:flex;
+}
+.heart, .score{
+  margin:2% 5%;
+  font-size:2em;
+  width:50%;
+  font-family:'Courier New', Courier, monospace;
+}
+.panel.full{
+}
+.row{
+  margin-left: auto;
+  margin-right: auto;
+  display:flex;
+  justify-content: center;
+  max-width:100%;
 }
 .cell-absolute{
-  display:inline-block;
+  text-align: center;
 }
-.absolute{
-  display:absolute;
+.cell-data{
+  font-family:monospace;
+  font-size:2em;
+}
+.equation.center{
+  margin-left: auto;
+  margin-right: auto;
+  display:flex;;
+  justify-content: center;
+  font-size:2em;
+  font-family:'Courier New', Courier, monospace;
+}
+.equation.center div{
+  border:1px solid #CCCCCC;
 }
 </style>
 </head>
@@ -52,23 +99,23 @@ Stat full width
  History
 <div class="game full"><div class="game center">
   <div class="stat full">
-    <div class="heart left">
+    <div class="heart left">0
     </div><!-- heart left -->
-    <div class="score left">
+    <div class="score right">0
     </div><!-- score left-->
   </div><!-- stat full -->
   <div class="panel full"><div class="panel center">
-    <!-- row , cell absolute, cell data -->
+    <!-- row , cell-absolute, cell-data -->
   </div><!-- panel center --></div><!-- panel full -->
   <div class="equation full"><div class="equation center">
-    <div class="negative"></div>
-    <div class="left operand"></div>
-    <div class="operator"></div>
-    <div class="right operand"></div>
-    <div class="equal"></div>
-    <div class="result"></div>
+    <!--div class="negative">-</div-->
+    <div class="leftop operand">1</div>
+    <div class="operator">+</div>
+    <div class="rightop operand">2</div>
+    <div class="equal">=</div>
+    <div class="result">3</div>
   </div><!-- equation center--></div><!-- equation full -->
-  <div class="history"></div>
+  <div class="history full"></div>
 </div><!-- game center --></div><!-- game full- -->
 
 <footer>
@@ -93,6 +140,12 @@ $(document).ready(function(){
       temp+="</div>";
     }
     $("div.panel.center").html(temp);
+    $("div.cell-absolute").width($("div.cell-absolute").height());
+    $("div.cell-absolute").css("maxWidth",(100/colCount)+"%");
+    //$("div.row").width($("div.cell-absolute").width()*colCount);
+    var cell-width=$("div.cell-absolute").width();
+    // operand, result= 5 * width, others min-width=width
+    //equation maxWidth, operand, result maxWidth
   }
 
 /************************************************************************/
