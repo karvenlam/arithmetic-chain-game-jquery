@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>html css helper</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<style>
+body{
+  font-size:16px;
+  background-color: #eee;
+}
+.full{
+  width:100%;
+  margin:2% 0;
+}
+.center{
+  margin-left: auto;
+  margin-right: auto;
+  max-width:800px;
+  background-color:#f4f4f4;
+}
+.dropdown-container, .dropdown-label, .dropdown {
+  position: relative;
+  display: inline-block;
+  background-color:yellow;
+  padding:2px;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.dropdown-item{
+  cursor:pointer;
+}
+.full div:not(.dropdown-item){
+  background-color:rgba(128,128,192,.7);
+}
+</style>
+</head>
+<body>
+<header>
+</header>
+<div class="full">
+</div>
+<script>
+  $.fn.createDropdown = function(cssString){
+    var arr1 = cssString.split(":");
+    var arr2 = arr1[1].replace(";","").split("|");
+    var temp="<div class='dropdown-container'>";
+      temp+="<div class='dropdown-label'>"+arr1[0]+"</div>";
+      temp+="<div class='dropdown'>initial<div class='dropdown-content'>";
+        for(var i=0;i<arr2.length;i++){
+          temp+="<div class='dropdown-item'>"+arr2[i]+"</div>";
+        }
+      temp+="</div></div>";
+    temp+="</div>";
+    console.log(temp);
+    console.log($(this).attr("class"));
+    $(this).append(temp);
+  }
+  $(document).ready(function(){
+  });
+</script>
+<div class="full flexbox">
+
+  flex-grow	A number specifying how much the item will grow relative to the rest of the flexible items
+  flex-shrink	A number specifying how much the item will shrink relative to the rest of the flexible items
+  flex-basis	The length of the item. Legal values: "auto", "inherit", or a number followed by "%", "px", "em" or any other length unit
+  <div class="center flex-container">
+  <script>
+    $(document).ready(function(){
+      $(".flex-container").createDropdown("display:flex;");
+    });
+  </script>
+
+
+.flex-container{
+  display:flex;
+  flex-direction: row|row-reverse|column|column-reverse|initial|inherit;
+  flex-wrap: nowrap|wrap|wrap-reverse|initial|inherit;
+  flex-flow: flex-direction flex-wrap|initial|inherit;
+  justify-content: flex-start|flex-end|center|space-between|space-around|initial|inherit;
+  align-items: stretch|center|flex-start|flex-end|baseline|initial|inherit;
+  align-content: stretch|center|flex-start|flex-end|space-between|space-around|initial|inherit;
+}
+.flex-item{
+  flex-basis: number|auto|initial|inherit;
+  flex-grow: number|initial|inherit;
+  flex-shrink: number|initial|inherit;
+  flex: flex-grow flex-shrink flex-basis|auto|initial|inherit;
+  align-self: auto|stretch|center|flex-start|flex-end|baseline|initial|inherit;
+}
+
+
+
+
+</div></div><!-- flexbox -->
+</body></html>
